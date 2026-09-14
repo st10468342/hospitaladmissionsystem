@@ -18,3 +18,5 @@ Illness: Pneumonia
 
 Patient Admitted Successfully.
 Allocated Bed: 1
+
+YouTube link with voice over: https://youtu.be/USIp4hsvXFY?si=jir9bZrwj9iReUwK 
