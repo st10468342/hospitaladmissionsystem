@@ -1,0 +1,223 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class HospitalAdmissionSystem {
+
+    static ArrayList<Patient> patients = new ArrayList<>();
+
+    static final int TOTAL_BEDS = 20;
+    static boolean[] beds = new boolean[TOTAL_BEDS];
+
+    static Scanner input = new Scanner(System.in);
+
+    public static void main(String[] args) {
+
+        int choice;
+
+        do {
+
+            System.out.println("\n==============================");
+            System.out.println(" HOSPITAL ADMISSION SYSTEM");
+            System.out.println("==============================");
+            System.out.println("1. Admit Patient");
+            System.out.println("2. View Patients");
+            System.out.println("3. Search Patient");
+            System.out.println("4. Discharge Patient");
+            System.out.println("5. View Available Beds");
+            System.out.println("6. Exit");
+
+            System.out.print("Choose option: ");
+            choice = input.nextInt();
+
+            switch (choice) {
+
+                case 1:
+                    admitPatient();
+                    break;
+
+                case 2:
+                    viewPatients();
+                    break;
+
+                case 3:
+                    searchPatient();
+                    break;
+
+                case 4:
+                    dischargePatient();
+                    break;
+
+                case 5:
+                    availableBeds();
+                    break;
+
+                case 6:
+                    System.out.println("System Closed.");
+                    break;
+
+                default:
+                    System.out.println("Invalid Option");
+            }
+
+        } while (choice != 6);
+
+    }
+
+    public static void admitPatient() {
+
+        input.nextLine();
+
+        System.out.print("Patient ID: ");
+        int id = input.nextInt();
+        input.nextLine();
+
+        System.out.print("Patient Name: ");
+        String name = input.nextLine();
+
+        System.out.print("Age: ");
+        int age = input.nextInt();
+        input.nextLine();
+
+        System.out.print("Gender: ");
+        String gender = input.nextLine();
+
+        System.out.print("Illness: ");
+        String illness = input.nextLine();
+
+        int bed = allocateBed();
+
+        if (bed == -1) {
+            System.out.println("No Beds Available.");
+            return;
+        }
+
+        Patient patient = new Patient(id, name, age, gender, illness, bed);
+
+        patients.add(patient);
+
+        System.out.println("Patient Admitted Successfully.");
+        System.out.println("Allocated Bed: " + bed);
+
+    }
+
+    public static int allocateBed() {
+
+        for (int i = 0; i < beds.length; i++) {
+
+            if (!beds[i]) {
+
+                beds[i] = true;
+
+                return i + 1;
+
+            }
+
+        }
+
+        return -1;
+
+    }
+
+    public static void viewPatients() {
+
+        if (patients.isEmpty()) {
+
+            System.out.println("No Patients Found.");
+
+        } else {
+
+            for (Patient p : patients) {
+
+                System.out.println(p);
+
+            }
+
+        }
+
+    }
+
+    public static void searchPatient() {
+
+        System.out.print("Enter Patient ID: ");
+
+        int id = input.nextInt();
+
+        boolean found = false;
+
+        for (Patient p : patients) {
+
+            if (p.getPatientID() == id) {
+
+                System.out.println(p);
+
+                found = true;
+
+            }
+
+        }
+
+        if (!found) {
+
+            System.out.println("Patient Not Found.");
+
+        }
+
+    }
+
+    public static void dischargePatient() {
+
+        System.out.print("Enter Patient ID: ");
+
+        int id = input.nextInt();
+
+        Patient removePatient = null;
+
+        for (Patient p : patients) {
+
+            if (p.getPatientID() == id) {
+
+                removePatient = p;
+
+                beds[p.getBedNumber() - 1] = false;
+
+            }
+
+        }
+
+        if (removePatient != null) {
+
+            patients.remove(removePatient);
+
+            System.out.println("Patient Discharged.");
+
+        } else {
+
+            System.out.println("Patient Not Found.");
+
+        }
+
+    }
+
+    public static void availableBeds() {
+
+        int count = 0;
+
+        System.out.println("\nAvailable Beds:");
+
+        for (int i = 0; i < beds.length; i++) {
+
+            if (!beds[i]) {
+
+                System.out.print((i + 1) + " ");
+
+                count++;
+
+            }
+
+        }
+
+        System.out.println("\nTotal Available Beds: " + count);
+
+    }
+
+}
